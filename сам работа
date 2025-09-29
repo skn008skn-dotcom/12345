@@ -10,20 +10,20 @@ int main()
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distr(0, 100);
 
-    int secret = distr(gen);
-    int guess;
+    int загаданное = distr(gen);
+    int попытка;
 
     std::cout << "Угадай число от 0 до 100!\n";
 
     while (true)
     {
-        std::cin >> guess;
-        if (guess == secret)
+        std::cin >> попытка;
+        if (попытка == загаданное)
         {
             std::cout << "Угадал!\n";
             break;
         }
-        else if (guess < secret)
+        else if (попытка < загаданное)
         {
             std::cout << "Надо больше\n";
         }
