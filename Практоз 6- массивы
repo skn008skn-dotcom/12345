@@ -1,0 +1,60 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    int N;
+    double temp[31];
+
+    cout << "Введите кол-во дней (1-31): ";
+    cin >> N;
+
+    while (N < 1 || N > 31) {
+        cout << "Ошибка! В месяце может быть от 1 до 31 дней: ";
+        cin >> N;
+    }
+
+    cout << "Введите температуры для каждого дня:\n";
+    for (int i = 0; i < N; i++) {
+        cout << "День " << i + 1 << ": ";
+        cin >> temp[i];
+    }
+
+    //  все температуры
+    cout << "\nТемпературы за месяц: ";
+    for (int i = 0; i < N; i++) {
+        cout << temp[i] << " ";
+    }
+    cout << endl;
+
+    // поиск Мах и Min
+    double maxTemp = temp[0];
+    double minTemp = temp[0];
+
+    for (int i = 1; i < N; i++) {
+        if (temp[i] > maxTemp) maxTemp = temp[i];
+        if (temp[i] < minTemp) minTemp = temp[i];
+    }
+    // вывод Мах и Min
+    cout << "Самая высокая температура: " << maxTemp << endl;
+    cout << "Самая низкая температура: " << minTemp << endl;
+
+    // вычисление средней температуры
+    double sum = 0;
+    for (int i = 0; i < N; i++) {
+        sum += temp[i];
+    }
+    double sredn = sum / N;
+    cout << "Средняя температура за месяц: " << sredn << endl;
+
+    // дней с температурой ниже нуля
+    int xaxa = 0;
+    for (int i = 0; i < N; i++) {
+        if (temp[i] < 0) xaxa++;
+    }
+    cout << "Дней с температурой ниже нуля: " << xaxa << endl;
+
+    cout << endl;
+
+    return 0;
+}
