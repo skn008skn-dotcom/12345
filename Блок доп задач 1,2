@@ -1,0 +1,84 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    int N;
+    double temp[100];
+
+    cout << "Введите число (1-100): ";
+    cin >> N;
+
+    while (N < 1 || N > 100) {
+        cout << "Ошибка! Введите число от 1 до 100: ";
+        cin >> N;
+    }
+
+    // ввод температур
+    cout << "Введите температуры для каждого дня:\n";
+    for (int i = 0; i < N; i++) {
+        cout << "День " << i + 1 << ": ";
+        cin >> temp[i];
+    }
+
+    // Блок доп задачь 1
+    cout << "\nБлок доп задачь (1)" << endl;
+    double x;
+    cout << "Введите число x: ";
+    cin >> x;
+
+    double task1[100];
+    int count1 = 0;
+
+    // отсечение элементов > x
+    for (int i = 0; i < N; i++) {
+        if (temp[i] <= x) {
+            task1[count1] = temp[i];
+            count1++;
+        }
+    }
+
+    cout << "Массив после удаления элементов > " << x << ": ";
+    if (count1 == 0) {
+        cout << "массив пуст";
+    }
+    else {
+        for (int i = 0; i < count1; i++) {
+            cout << task1[i] << " ";
+        }
+    }
+    cout << endl;
+
+    // Блок доп задачь 2
+    cout << "\nБлок доп задачь (2)" << endl;
+
+    double task2[100];
+    int count2 = 0;
+
+    // копируем первый элемент
+    if (N > 0) {
+        task2[count2] = temp[0];
+        count2++;
+
+        // копируем остальные, повторы отсекаем
+        for (int i = 1; i < N; i++) {
+            if (temp[i] != temp[i - 1]) {
+                task2[count2] = temp[i];
+                count2++;
+            }
+        }
+    }
+
+    cout << "Массив после удаления подряд идущих одинаковых чисел: ";
+    if (count2 == 0) {
+        cout << "массив пуст";
+    }
+    else {
+        for (int i = 0; i < count2; i++) {
+            cout << task2[i] << " ";
+        }
+    }
+    cout << endl;
+
+    return 0;
+}
