@@ -1,0 +1,132 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class WarhammerFaction {
+protected:
+    string name;
+
+public:
+    WarhammerFaction(string factionName) : name(factionName) {}
+
+    virtual ~WarhammerFaction() {
+        cout << "[WarhammerFaction] Объект " << name << " уничтожен." << endl;
+    }
+
+    virtual void move() = 0;
+
+    virtual void makeSound() {
+        cout << name << " издает неизвестный звук." << endl;
+    }
+};
+
+class Skaven : public WarhammerFaction {
+public:
+    Skaven(string factionName) : WarhammerFaction(factionName) {}
+
+    void makeSound() override {
+        cout << "Скавены (" << name << "): Больше варп-молний! Больше рока! Взорвать-сжечь всё ради Икета!" << endl;
+    }
+
+    void move() override {
+        cout << "Описание фракции: Подземные крысолюди, использующие варп-камни, ядерное оружие и тактику закидывания мясом." << endl;
+    }
+
+    ~Skaven() {
+        cout << "[Skaven] Деструктор Skaven для " << name << endl;
+    }
+};
+
+class Empire : public WarhammerFaction {
+public:
+    Empire(string factionName) : WarhammerFaction(factionName) {}
+
+    void makeSound() override {
+        cout << "Империя Сигмара (" << name << "): Призовите курфюрстов! За Сигмара!" << endl;
+    }
+
+    void move() override {
+        cout << "Описание фракции: Оплот человечества с сильной артиллерией, стальными шеренгами пехоты и верой в Бога-Императора." << endl;
+    }
+
+    ~Empire() {
+        cout << "[Empire] Деструктор Empire для " << name << endl;
+    }
+};
+
+class Maggothkin : public WarhammerFaction {
+private:
+    bool isPlagued;
+
+public:
+    Maggothkin(string factionName, bool plague) : WarhammerFaction(factionName), isPlagued(plague) {}
+
+    void makeSound() override {
+        cout << "Маготкинги (" << name << "): Прими дары Дедушки Нургла! Славься гниль!" << endl;
+    }
+
+    void move() override {
+        cout << "Описание фракции: ";
+        if (isPlagued) {
+            cout << "Медлительные, но невероятно живучие слуги бога чумы, распространяющие болезни по карте." << endl;
+        }
+        else {
+            cout << "Тяжелобронированные воины хаоса, сдерживающие любой натиск врага." << endl;
+        }
+    }
+
+    ~Maggothkin() {
+        cout << "[Maggothkin] Деструктор Maggothkin для " << name << endl;
+    }
+};
+
+class DarkElf : public WarhammerFaction {
+public:
+    DarkElf(string factionName) : WarhammerFaction(factionName) {}
+
+    void makeSound() override {
+        cout << "Тёмные эльфы (" << name << "): Кровь для Малекита! Рабы сами себя не захватят!" << endl;
+    }
+
+    void move() override {
+        cout << "Описание фракции: Жестокие и коварные налетчики из Наггарота, завязанные на механике рабства и черных ковчегах." << endl;
+    }
+
+    ~DarkElf() {
+        cout << "[DarkElf] Деструктор DarkElf для " << name << endl;
+    }
+};
+
+void factionShow(WarhammerFaction* faction) {
+    faction->makeSound();
+    faction->move();
+    cout << "-----------------------------------" << endl;
+}
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+
+    cout << "Фракции из Total War: Warhammer III" << endl << endl;
+
+    vector<WarhammerFaction*> totalWar;
+
+    totalWar.push_back(new Skaven("Клан Скраер"));
+    totalWar.push_back(new Empire("Рейкланд"));
+    totalWar.push_back(new Maggothkin("Оспяные труженики", true));
+    totalWar.push_back(new DarkElf("Наггаронд"));
+
+    for (WarhammerFaction* currentFaction : totalWar) {
+        factionShow(currentFaction);
+    }
+
+    for (WarhammerFaction* currentFaction : totalWar) {
+        delete currentFaction;
+        cout << endl;
+    }
+
+    totalWar.clear();
+
+    return 0;
+}
