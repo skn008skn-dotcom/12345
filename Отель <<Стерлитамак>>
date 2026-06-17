@@ -1,0 +1,124 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+#include <clocale>
+
+struct Room {
+    int number;
+    std::string type;
+    double basePrice;
+    bool hasAC;
+    bool hasMiniBar;
+};
+
+struct Guest {
+    int id;
+    std::string name;
+    std::string contact;
+    std::string passport;
+};
+
+struct Booking {
+    int id;
+    int roomNumber;
+    int guestId;
+    std::string checkIn; 
+    std::string checkOut;
+    double totalCost;
+    bool isPaid;
+};
+
+class RoomRepository {
+    std::vector<Room> rooms;
+public:
+    void add(Room r) { rooms.push_back(r); }
+    std::vector<Room> getAll() { return rooms; }
+    Room* getByNumber(int num) {
+        for (auto& r : rooms) if (r.number == num) return &r;
+        return nullptr;
+    }
+};
+
+class GuestRepository {
+    std::vector<Guest> guests;
+public:
+    void add(Guest g) { guests.push_back(g); }
+    Guest* getById(int id) {
+        for (auto& g : guests) if (g.id == id) return &g;
+        return nullptr;
+    }
+};
+
+class BookingRepository {
+    std::vector<Booking> bookings;
+public:
+    void add(Booking b) { bookings.push_back(b); }
+    std::vector<Booking>& getAll() { return bookings; }
+    void remove(int id) {
+        bookings.erase(std::remove_if(bookings.begin(), bookings.end(),
+            [id](const Booking& b) { return b.id == id; }), bookings.end());
+    }
+};
+
+class BookingService {
+    RoomRepository& rooms;
+    GuestRepository& guests;
+    BookingRepository& bookings;
+public:
+    BookingService(RoomRepository& r, GuestRepository& g, BookingRepository& b)
+        : rooms(r), guests(g), bookings(b) {
+    }
+
+    bool createBooking(int bId, int roomNum, int gId, std::string in, std::string out) {
+        if (!rooms.getByNumber(roomNum) || !guests.getById(gId)) return false;
+
+        double price = rooms.getByNumber(roomNum)->basePrice;
+        bookings.add({ bId, roomNum, gId, in, out, price, false });
+        return true;
+    }
+};
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+
+    RoomRepository roomRepo;
+    GuestRepository guestRepo;
+    BookingRepository bookingRepo;
+    BookingService service(roomRepo, guestRepo, bookingRepo);
+
+    roomRepo.add({ 101, "Люкс", 5000, true, true });
+    roomRepo.add({ 102, "Стандарт", 2000, false, false });
+
+    int choice;
+    while (true) {
+        std::cout << "\n|=~=~=~=~=~=~=~=~=~=~=~=~=~=~=| \n|    Отель <<Стерлитамак>>    |      //\\\\__//\\\\ \n|=~=~=~=~=~=~=~=~=~=~=~=~=~=~=|    =/  о    o  \\=  < Я сбежал из Mewgenics \n|-Добро пожаловать на ресепшн!|     \\    ^     /  \\ \\   \n|-Чем-то могу помочь?         |     /          \\   | |" << std::endl;
+        std::cout << "|1) Список комнат   <=        |    |  U     U   \\ / / \n|2) Регистрация гостя   <=    |  [ ================= ]\n|3) Создать бронь   <=        |  |   Администратор   | \n|4) Выход   <=                |  |      Владик       | \n|=~=~=~=~=~=~=~=~=~=~=~=~=~=~=|  [ ================= ] \nВыбор: ";
+        std::cin >> choice;
+
+        if (choice == 4) break;
+
+        if (choice == 1) {
+            for (auto& r : roomRepo.getAll()) {
+                std::cout << "Номер: " << r.number << " (" << r.type << ") Цена: " << r.basePrice << std::endl;
+            }
+        }
+        else if (choice == 2) {
+            int id; std::string name;
+            std::cout << "ID и Имя: "; std::cin >> id >> name;
+            guestRepo.add({ id, name, "нет", "0000" });
+            std::cout << "Гость добавлен!" << std::endl;
+        }
+        else if (choice == 3) {
+            int bId, rNum, gId;
+            std::cout << "ID брони, номер комнаты, ID гостя: ";
+            std::cin >> bId >> rNum >> gId;
+            if (service.createBooking(bId, rNum, gId, "2026-06-20", "2026-06-21"))
+                std::cout << "Бронирование успешно!" << std::endl;
+            else
+                std::cout << "Ошибка бронирования!" << std::endl;
+        }
+    }
+    return 0;
+}
